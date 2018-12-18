@@ -10,3 +10,4 @@
 [submodule "shell/.neofetch"]
 	path = shell/.neofetch
 	url = https://github.com/dylanaraps/neofetch.git
+	branch = 3.2.0

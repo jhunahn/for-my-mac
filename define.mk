@@ -11,6 +11,10 @@ define COPY
 	$(Q) cp -R $1 $2
 endef
 
+define MKDIR
+	$(Q) mkdir -p $(1)
+endef
+
 define submodules
 	$(Q) git submodule init
 	$(Q) git submodule update

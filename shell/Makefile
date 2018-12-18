@@ -9,7 +9,7 @@ DEPENDS := gettext openssl bash-completion
 
 define neofetch
 	$(Q) echo >> $$HOME/$(1)
-	$(Q) echo "neofetch # print system information" >> $$HOME/$(1)
+	$(Q) echo "neofetch --iterm2 $$HOME/.config/neofetch/$2 # print system information" >> $$HOME/$(1)
 endef
 
 .PHONY: install uninstall context
@@ -31,16 +31,18 @@ context:
 		$$HOME/.zshrc
 
 /usr/local/bin/neofetch: .neofetch
-	$(Q) $(MAKE) -C $< install PREFIX=/usr/local
+	$(Q) sudo $(MAKE) -C $< install PREFIX=/usr/local
+	$(call MKDIR, $$HOME/.config/$(notdir $@))
+	$(call COPY, $(wildcard *.jpg), $$HOME/.config/$(notdir $@))
 
 install: context /usr/local/bin/neofetch
 ifeq (zsh,$(MODE))
 	$(call submodules)
 	$(MAKE) .install.sh
-	$(call neofetch,.zshrc)
+	$(call neofetch,.zshrc,$(wildcard *.jpg))
 else
 	$(MAKE) .bash_profile
-	$(call neofetch,.bash_profile)
+	$(call neofetch,.bash_profile,$(wildcard *.jpg))
 endif
 
 uninstall:
@@ -50,4 +52,4 @@ ifeq (zsh,$(MODE))
 else
 	$(call DELFILE,.bash_profile)
 endif
-
+	$(Q) sudo $(MAKE) -C .neofetch $@ PREFIX=/usr/local
