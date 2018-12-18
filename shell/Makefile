@@ -7,6 +7,11 @@ MODE ?= zsh
 
 DEPENDS := gettext openssl bash-completion
 
+define neofetch
+	$(Q) echo >> $$HOME/$(1)
+	$(Q) echo "neofetch # print system information" >> $$HOME/$(1)
+endef
+
 .PHONY: install uninstall context
 all:
 	@echo Run \'make install\' to install shell config
@@ -25,12 +30,17 @@ context:
 	$(Q) sed -i .back -e 's/\(plugins=(\)/ \1 $(notdir $(wildcard .zsh/*))/' \
 		$$HOME/.zshrc
 
-install: context
+/usr/local/bin/neofetch: .neofetch
+	$(Q) $(MAKE) -C $< install PREFIX=/usr/local
+
+install: context /usr/local/bin/neofetch
 ifeq (zsh,$(MODE))
 	$(call submodules)
 	$(MAKE) .install.sh
+	$(call neofetch,.zshrc)
 else
 	$(MAKE) .bash_profile
+	$(call neofetch,.bash_profile)
 endif
 
 uninstall:

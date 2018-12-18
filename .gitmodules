@@ -7,3 +7,6 @@
 [submodule "shell/.zsh/zsh-autosuggestions"]
 	path = shell/.zsh/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "shell/.neofetch"]
+	path = shell/.neofetch
+	url = https://github.com/dylanaraps/neofetch.git
