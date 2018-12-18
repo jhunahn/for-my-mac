@@ -23,6 +23,8 @@ all:
 
 context:
 	$(call check_context,$(DEPENDS))
+	$(Q) brew tap homebrew/cask
+	$(Q) brew cask install meld
 
 $(foreach FILE,$(CONFIGS),$(eval $(call getconfig,$(FILE))))
 
@@ -30,6 +32,7 @@ install: context $(CONFIGS)
 	$(call COPY,$(filter-out context, $?),$$HOME)
 	$(Q) git config --global user.name $(NAME)
 	$(Q) git config --global user.email $(EMAIL)
+	$(Q) git config --global merge.tool meld
 
 uninstall:
 	$(call DELFILE,$(CONFIGS))
