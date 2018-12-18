@@ -1,1 +1,4 @@
 git-completion.bash
+docker
+docker-compose
+docker-machine.bash

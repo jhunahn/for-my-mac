@@ -7,10 +7,15 @@ COMPLETION_DIR := $(shell brew --prefix)/etc/bash_completion.d
 
 DEPENDS := bash-completion wget
 
-define add_completion
-	$(MAKE) $(notdir $(1))
-	$(call MOV,$(1),$(COMPLETION_DIR))
+define docker_templete
+$(2):
+	@echo $2....
+	$(eval baseurl = https://raw.githubusercontent.com/docker/$(firstword $1))
+	$(eval _version := `$(patsubst %.bash,%,$2) --version`)
+	$(Q) wget $(baseurl)/$3$(shell echo $(_version) | awk '{print $$3}' | sed 's/,//')/contrib/completion/bash/$2
 endef
+
+docker-exec := docker docker-compose docker-machine.bash
 
 .PHONY: install uninstall context git
 all:
@@ -22,11 +27,15 @@ $(COMPLETION_DIR):
 git-completion.bash:
 	$(Q) wget https://raw.githubusercontent.com/git/git/v$$(git version | awk '{print $$3}')/contrib/completion/$@
 
-$(COMPLETION_DIR)/git-completion.bash: $(COMPLETION_DIR) 
-	$(call add_completion, $(notdir $@))
+$(eval $(call docker_templete,cli,docker,v))
+$(eval $(call docker_templete,compose,docker-compose))
+$(eval $(call docker_templete,machine,docker-machine.bash,v))
 
-install: $(COMPLETION_DIR)/git-completion.bash
+
+install: $(COMPLETION_DIR) git-completion.bash $(docker-exec)
+	$(call COPY,$(filter-out $<,$^),$(COMPLETION_DIR))
 
 uninstall:
-	$(call DELFILE, $(COMPLETION_DIR)/git-completion.bash)
+	$(call DELFILE, git-completion.bash $(docker-exec))
+	$(call DELFILE, $(addprefix $(COMPLETION_DIR)/,git-completion.bash $(docker-exec)))
 
