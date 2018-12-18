@@ -21,9 +21,13 @@ context:
 .install.sh:
 	$(Q) curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh > $@
 	$(Q) SHELL=$(SHELL) $(SHELL) -c "$$(sed 's/env zsh.*//g' $@)"
+	$(Q) cp -R $(wildcard .zsh/*) $$HOME/.oh-my-zsh/custom/plugins
+	$(Q) sed -i .back -e 's/\(plugins=(\)/ \1 $(notdir $(wildcard .zsh/*))/' \
+		$$HOME/.zshrc
 
 install: context
 ifeq (zsh,$(MODE))
+	$(call submodules)
 	$(MAKE) .install.sh
 else
 	$(MAKE) .bash_profile
