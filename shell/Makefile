@@ -33,7 +33,7 @@ context:
 /usr/local/bin/neofetch: .neofetch
 	$(Q) sudo $(MAKE) -C $< install PREFIX=/usr/local
 	$(call MKDIR, $$HOME/.config/$(notdir $@))
-	$(call COPY, $(wildcard *.jpg), $$HOME/.config/$(notdir $@))
+	$(call COPY, $(wildcard .resource/*.jpg), $$HOME/.config/$(notdir $@))
 
 install: context /usr/local/bin/neofetch
 ifeq (zsh,$(MODE))
