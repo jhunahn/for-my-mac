@@ -11,3 +11,6 @@
 	path = shell/.neofetch
 	url = https://github.com/dylanaraps/neofetch.git
 	branch = 3.2.0
+[submodule "shell/.zsh/zsh-completions"]
+	path = shell/.zsh/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git
