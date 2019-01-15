@@ -1,16 +1,22 @@
 [submodule "vim/.vim/bundle/Vundle.vim"]
 	path = vim/.vim/bundle/Vundle.vim
 	url = https://github.com/VundleVim/Vundle.vim.git
-[submodule "shell/.zsh/zsh-syntax-highlighting"]
-	path = shell/.zsh/zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule "shell/.zsh/zsh-autosuggestions"]
-	path = shell/.zsh/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions.git
 [submodule "shell/.neofetch"]
 	path = shell/.neofetch
 	url = https://github.com/dylanaraps/neofetch.git
 	branch = 3.2.0
-[submodule "shell/.zsh/zsh-completions"]
-	path = shell/.zsh/zsh-completions
+[submodule "shell/.zsh/plugins/zsh-autosuggestions"]
+	path = shell/.zsh/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "shell/.zsh/plugins/zsh-completions"]
+	path = shell/.zsh/plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
+[submodule "shell/.zsh/plugins/zsh-syntax-highlighting"]
+	path = shell/.zsh/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "shell/.font/powerline"]
+	path = shell/.font/powerline
+	url = https://github.com/powerline/fonts.git
+[submodule "shell/.zsh/themes/powerlevel9k"]
+	path = shell/.zsh/themes/powerlevel9k
+	url = https://github.com/bhilburn/powerlevel9k.git

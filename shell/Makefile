@@ -18,6 +18,8 @@ all:
 
 context:
 	$(call check_context,$(DEPENDS))
+	$(Q) brew cask install item2
+	$(call submodules)
 
 .bash_profile: .config
 	$(call COPY, $<, $@)
@@ -26,23 +28,27 @@ context:
 .install.sh:
 	$(Q) curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh > $@
 	$(Q) SHELL=$(SHELL) $(SHELL) -c "$$(sed 's/env zsh.*//g' $@)"
-	$(Q) cp -R $(wildcard .zsh/*) $$HOME/.oh-my-zsh/custom/plugins
-	$(Q) sed -i .back -e 's/\(plugins=(\)/ \1 $(notdir $(wildcard .zsh/*))/' \
-		$$HOME/.zshrc
-	$(Q) echo "autoload -U compinit && compinit" >> $$HOME/.zshrc
+	$(Q) cp -R $(wildcard .zsh/*) $$HOME/.oh-my-zsh/custom
+	$(Q) sed -i '' 's/\(plugins=(\)/ \1 $(notdir $(wildcard .zsh/plugins/*))/' $$HOME/.zshrc
+	$(Q) sed -i '' 's/\(ZSH\_THEME=\).*/\1"powerlevel9k\/powerlevel9k"/' $$HOME/.zshrc
+	$(Q) wget https://raw.githubusercontent.com/arcticicestudio/nord-iterm2/develop/src/xml/Nord.itermcolors
+	@echo "import Nord color preset"
+	$(Q) .font/powerline/install.sh
+
+.zsh_profile:
+	$(Q) cat $@ >> $$HOME/.zshrc
+	$(Q) sed -i '1i\export TERM="xterm-256color"' $$HOME/.zshrc
 
 /usr/local/bin/neofetch: .neofetch
 	$(Q) sudo $(MAKE) -C $< install PREFIX=/usr/local
 	$(call MKDIR, $$HOME/.config/$(notdir $@))
 	$(call COPY, $(wildcard .resource/*.jpg), $$HOME/.config/$(notdir $@))
 
-install: context /usr/local/bin/neofetch
 ifeq (zsh,$(MODE))
-	$(call submodules)
-	$(MAKE) .install.sh
+install: context .install.sh .zsh_profile /usr/local/bin/neofetch
 	$(call neofetch,.zshrc,$(wildcard *.jpg))
 else
-	$(MAKE) .bash_profile
+install: context .bash_profile /usr/local/bin/neofetch
 	$(call neofetch,.bash_profile,$(wildcard *.jpg))
 endif
 

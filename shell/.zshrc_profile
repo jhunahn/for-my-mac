@@ -1,0 +1,8 @@
+autoload -U compinit && compinit
+
+prompt_context() {
+  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
+    left_prompt_segment black default "%(!.%{%F{yellow}%}.)"
+  fi
+}
+DEFAULT_USER=
