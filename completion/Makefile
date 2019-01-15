@@ -33,7 +33,11 @@ $(eval $(call docker_templete,machine,docker-machine.bash,v))
 
 
 install: $(COMPLETION_DIR) git-completion.bash $(docker-exec)
+ifneq (zsh,$(SH))
 	$(call COPY,$(filter-out $<,$^),$(COMPLETION_DIR))
+else
+	$(Q) sed -i '' 's/\(plugins=(\)/\1\ docker/' $${HOME}/.zshrc
+endif
 
 uninstall:
 	$(call DELFILE, git-completion.bash $(docker-exec))

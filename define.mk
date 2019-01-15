@@ -1,4 +1,6 @@
 
+SH ?= $(notdir $(shell id -P | awk -F ':' '{print $$10}'))
+
 define DELFILE
 	$(Q) rm -rf $1
 endef

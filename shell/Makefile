@@ -29,6 +29,7 @@ context:
 	$(Q) cp -R $(wildcard .zsh/*) $$HOME/.oh-my-zsh/custom/plugins
 	$(Q) sed -i .back -e 's/\(plugins=(\)/ \1 $(notdir $(wildcard .zsh/*))/' \
 		$$HOME/.zshrc
+	$(Q) echo "autoload -U compinit && compinit" >> $$HOME/.zshrc
 
 /usr/local/bin/neofetch: .neofetch
 	$(Q) sudo $(MAKE) -C $< install PREFIX=/usr/local
