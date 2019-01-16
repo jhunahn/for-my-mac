@@ -12,7 +12,7 @@ define neofetch
 	$(Q) echo "neofetch --iterm2 $$HOME/.config/neofetch/$2 # print system information" >> $$HOME/$(1)
 endef
 
-.PHONY: install uninstall context
+.PHONY: install uninstall context .zsh_profile config
 all:
 	@echo Run \'make install\' to install shell config
 
@@ -27,15 +27,21 @@ context:
 
 .install.sh:
 	$(Q) curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh > $@
+
+config: .install.sh
+	$(Q) sudo chsh -s $(shell which zsh)
 	$(Q) SHELL=$(SHELL) $(SHELL) -c "$$(sed 's/env zsh.*//g' $@)"
 	$(Q) cp -R $(wildcard .zsh/*) $$HOME/.oh-my-zsh/custom
 	$(Q) sed -i '' 's/\(plugins=(\)/ \1 $(notdir $(wildcard .zsh/plugins/*))/' $$HOME/.zshrc
-	$(Q) sed -i '' 's/\(ZSH\_THEME=\).*/\1"powerlevel9k\/powerlevel9k"/' $$HOME/.zshrc
+	$(Q) sed -i '' 's/\(^ZSH_THEME=\).*/\1"powerlevel9k\/powerlevel9k"/' $$HOME/.zshrc
+	$(Q) sed -i '' '/^ZSH_THEME=/i\POWERLEVEL9K_MODE=\"awesome-fontconfig\"/' $$HOME/.zshrc
 	$(Q) wget https://raw.githubusercontent.com/arcticicestudio/nord-iterm2/develop/src/xml/Nord.itermcolors
 	@echo "import Nord color preset"
-	$(Q) .font/powerline/install.sh
+	$(foreach TAR,$(wildcard .font/*/install.sh),$(SHELL) $(TAR))
+	$(Q) cd ~/Library/Fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" \
+		https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
 
-.zsh_profile:
+.zsh_profile: config
 	$(Q) cat $@ >> $$HOME/.zshrc
 	$(Q) sed -i '1i\export TERM="xterm-256color"' $$HOME/.zshrc
 
@@ -45,7 +51,7 @@ context:
 	$(call COPY, $(wildcard .resource/*.jpg), $$HOME/.config/$(notdir $@))
 
 ifeq (zsh,$(MODE))
-install: context .install.sh .zsh_profile /usr/local/bin/neofetch
+install: context .zsh_profile /usr/local/bin/neofetch
 	$(call neofetch,.zshrc,$(wildcard *.jpg))
 else
 install: context .bash_profile /usr/local/bin/neofetch
