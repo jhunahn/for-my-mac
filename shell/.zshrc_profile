@@ -1,4 +1,5 @@
 autoload -U compinit && compinit
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir newline vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs_joined)
 POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
